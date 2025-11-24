@@ -1,7 +1,7 @@
-Here is the MCOA Deep Dive Quiz formatted in Markdown. You can copy the text below directly into any Markdown editor (like Obsidian, GitHub, or VS Code).
-
 MCOA Deep Dive Quiz (50 Questions)
+
 Core Identity, Purpose, and Status
+
 1. What is the primary function of the MultiCluster Observability (MCO) component within RHACM?
 
 Answer: MCO allows users to gain insights and optimize RHACM managed clusters.
