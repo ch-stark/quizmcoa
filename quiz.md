@@ -1,3 +1,111 @@
+Based on the provided MCOA Metrics Documentation, here are 25 questions covering architecture, configuration, troubleshooting, and best practices.
+
+General Architecture & Enabling
+What are the three key advantages of the MCOA metrics collection compared to the previous version?
+
+Improved Configurability, Increased Metrics Federation Scalability, and More Performant Remote Write with Network Partition Resiliency.
+
+Which two upstream components replace the legacy Endpoint operator and Metrics Collector?
+
+The COO's Prometheus Operator and a Prometheus Agent.
+
+What is the required configuration change in the MultiClusterObservability custom resource to enable default platform metrics?
+
+Set spec.capabilities.platform.metrics.default.enabled to true.
+
+In which namespace is the multicluster-observability-addon-manager deployed?
+
+open-cluster-management-observability.
+
+What is the default mechanism MCOA uses to ensure consistency and enforce invariants in configurations?
+
+Server-side apply.
+
+Configuration APIs
+What are the three main APIs MCOA offers for configuring metrics collection?
+
+PrometheusAgents, ScrapeConfigs, and PrometheusRules.
+
+If a new placement is added to the ClusterManagementAddon, what does the addon manager automatically create?
+
+A specific default PrometheusAgent, default ScrapeConfigs, and PrometheusRules for that placement.
+
+What happens if a user modifies an enforced field in a PrometheusAgent, such as removing the remote write configuration?
+
+The addon manager automatically reverts the change.
+
+Which API resource is used to define what metrics to collect?
+
+ScrapeConfig.
+
+What labels must be present on a PrometheusAgent for the addon manager to recognize it?
+
+app.kubernetes.io/component, app.kubernetes.io/managed-by, placement-ref-name, and placement-ref-namespace.
+
+Customizing Metrics & Workloads
+What is the default scrape interval set in the PrometheusAgent?
+
+300 seconds.
+
+What error might occur if the scrape interval is set below 90 seconds?
+
+"Error on ingesting out-of-order samples."
+
+Which label key distinguishes between a platform metrics collector and a user-workload metrics collector?
+
+app.kubernetes.io/component.
+
+How can you restrict user workload ScrapeConfigs to only collect metrics from specific namespaces (e.g., those with app: my-app)?
+
+By configuring the scrapeConfigNamespaceSelector in the PrometheusAgent.
+
+What specific annotation is required for PrometheusRules targeting user workloads to ensure they are deployed to the correct namespace?
+
+observability.open-cluster-management.io/target-namespace.
+
+Why must you use the monitoring.coreos.com group for PrometheusRule resources, while ScrapeConfig uses monitoring.rhobs?
+
+The document explicitly warns to use monitoring.coreos.com for PrometheusRules and monitoring.rhobs for ScrapeConfig and PrometheusAgent.
+
+Advanced Features & External Export
+What are the two advantages of configuring a remote write to an external endpoint directly on the PrometheusAgent rather than using writeStorage on the Hub?
+
+Configurable metrics forwarding (using relabeling) and enhanced resiliency (up to two hours).
+
+How can you filter out specific metrics (like the Watchdog alert) before they are sent to the hub?
+
+By adding writeRelabelConfigs with a drop action in the remoteWrite configuration of the PrometheusAgent.
+
+When exporting metrics to an external endpoint via PrometheusAgent, where must the TLS secrets be created?
+
+In the open-cluster-management-observability namespace.
+
+Troubleshooting & Operations
+What happens if a managed cluster belongs to multiple placements referenced in the ClusterManagementAddon?
+
+It inherits the configuration from the last compatible placement listed in the ClusterManagementAddon.
+
+How long does the standard remote write implementation provide resiliency to network partitions between spokes and the hub?
+
+Up to one hour.
+
+What are the three specific alerting rules pushed to managed clusters to monitor the addon's health?
+
+MetricsCollectorNotIngestingSamples, MetricsCollectorRemoteWriteFailures, and MetricsCollectorRemoteWriteBehind.
+
+How can you disable metrics collection on a specific cluster?
+
+By excluding the cluster from all placements referenced in the ClusterManagementAddOn (e.g., using a label selector/predicate).
+
+When troubleshooting a custom ScrapeConfig, which field in the ClusterManagementAddOn status confirms that the config reference exists?
+
+The specHash within status.installProgressions.configReferences.
+
+What additional resources does MCOA deploy on non-OpenShift managed clusters that are not deployed on OpenShift clusters?
+
+The Node Exporter, Kube State Metrics, and a Prometheus server.
+
+
 MCOA Deep Dive Quiz (50 Questions)
 
 Core Identity, Purpose, and Status
